@@ -14,3 +14,7 @@ All experiments are conducted under the following conditions:
 
 ### Experiment 1: Open Environment
 
+https://github.com/user-attachments/assets/100e4e85-387d-4aba-9923-ea0c5fc3bc4c
+
+This experiment presents a pursuit-evasion scenario without static obstacles. Both robots are initially positioned at the top of the field, with the evader attempting to reach its designated goal on the left-hand side. The open environment provides sufficient freedom of movement while accounting for the limitations of our lab setup and the non-holonomic nature of the robots.
+
