@@ -11,3 +11,6 @@ All experiments are conducted under the following conditions:
 - All robots operate under non-holonomic motion constraints
 - Videos show split-screen views: lab setup (right) and trajectory visualization (left)
 - Purple dashed line indicates the evader's initially planned high-level trajectory
+
+### Experiment 1: Open Environment
+
