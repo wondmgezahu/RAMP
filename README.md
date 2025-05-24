@@ -1,5 +1,8 @@
 # RAMP
 Real-Time Adaptive Motion Planning via Point Cloud-Guided, Energy-Based Diffusion and Potential Fields
+### New Physical Experiments
+
+### Previous Experiments 
 ## Physical Robot Experiments
 This documentation presents physical robot demonstrations for pursuit-evasion scenarios implemented using our RAMP framework.
 
