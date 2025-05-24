@@ -1,19 +1,38 @@
 # RAMP
 Real-Time Adaptive Motion Planning via Point Cloud-Guided, Energy-Based Diffusion and Potential Fields
 
+# Physical Robot Demonstrations
+
 This documentation presents physical robot demonstrations for pursuit-evasion scenarios implemented using our RAMP framework.
-### Details of RC QCar
-## New Physical Robot Experiments
 
-### Experiment Workspace Setup
+## Experimental Setup
+
+### Workspace Configuration
 All experiments are conducted under the following conditions:
+- **Environment**: 6×6m² experimental area
+- **Robots**: Two autonomous vehicles - blue evader and red pursuer  
+- **Objective**: Evader must reach designated goal while avoiding capture
+- **Constraints**: All robots operate under non-holonomic motion constraints
+- **Visualization**: Split-screen videos showing lab setup (bottom) and trajectory visualization (top)
 
-- 6×6m² experimental environment
-- Two autonomous robots: a green evader and a red pursuer
-- The evader must reach a designated goal while avoiding capture
-- All robots operate under non-holonomic motion constraints
-- Videos show split-screen views: lab setup (right) and trajectory visualization (left)
-- Purple dashed line indicates the evader's initially planned high-level trajectory
+### Details of RC QCar
+[Car details to be added]
+
+## Experimental Scenarios
+
+Four pursuit-evasion experiments across two distinct start/goal configurations, each evaluated under varying obstacle densities:
+
+**Configuration Testing Matrix:**
+- **Scenario 1**: 4 static obstacles 
+- **Scenario 2**: 6 static obstacles (4 original + 2 additional unseen obstacles)
+
+**Video Sequence:**
+1. Configuration A - 4 obstacles 
+2. Configuration B - 4 obstacles 
+3. Configuration A - 6 obstacles (2 unseen obstacles added)
+4. Configuration B - 6 obstacles (2 unseen obstacles added)
+
+
 ## Previous Physical Robot Experiments 
 
 All experiments are conducted under the following conditions:
