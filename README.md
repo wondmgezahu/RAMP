@@ -34,7 +34,7 @@ Four pursuit-evasion experiments across two distinct start/goal configurations, 
 
 ## Experimental Videos
 
-<video src="https://github.com/user-attachments/assets/67efd7f6-aab0-4672-b881-fc321c550a8b" width="450" height="450" controls></video>
+<video src="https://github.com/user-attachments/assets/67efd7f6-aab0-4672-b881-fc321c550a8b" width="450" height="720" controls></video>
 
 **📥 [Download Original Quality](https://github.com/user-attachments/assets/67efd7f6-aab0-4672-b881-fc321c550a8b)** *(32.9 MB, 1080×1530, 1:10 duration)*
 
