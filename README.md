@@ -34,9 +34,16 @@ Four pursuit-evasion experiments across two distinct start/goal configurations, 
 
 ## Experimental Videos
 
-[**Download Full Video**](https://github.com/user-attachments/assets/67efd7f6-aab0-4672-b881-fc321c550a8b) *(32.9 MB, 1:10 duration)*
+**🎥 [Quick View (Web Version)](https://github.com/user-attachments/assets/67efd7f6-aab0-4672-b881-fc321c550a8b)** *(Optimized for browser viewing)*
 
-*Demonstrates all four pursuit-evasion scenarios with real robot validation*
+<video width="320" height="450" controls preload="metadata">
+  <source src="https://github.com/user-attachments/assets/[YOUR-COMPLETE-URL]" type="video/mp4">
+  <a href="https://github.com/user-attachments/assets/[YOUR-COMPLETE-URL]">Download Video</a>
+</video>
+
+**📥 [Download Original Quality](https://github.com/user-attachments/assets/67efd7f6-aab0-4672-b881-fc321c550a8b)** *(32.9 MB, 1080×1530, 1:10 duration)*
+
+*Demonstrates all four pursuit-evasion scenarios with real robot validation.*
 
 *Note: Download required for optimal viewing due to video format*
 
