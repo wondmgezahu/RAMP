@@ -1,5 +1,8 @@
 # RAMP
 Real-Time Adaptive Motion Planning via Point Cloud-Guided, Energy-Based Diffusion and Potential Fields
+
+This documentation presents physical robot demonstrations for pursuit-evasion scenarios implemented using our RAMP framework.
+
 ## New Physical Experiments
 ### Details of RC QCar
 ### Experiment Workspace Setup
@@ -13,7 +16,6 @@ All experiments are conducted under the following conditions:
 - Purple dashed line indicates the evader's initially planned high-level trajectory
 ## Previous Experiments 
 ## Physical Robot Experiments
-This documentation presents physical robot demonstrations for pursuit-evasion scenarios implemented using our RAMP framework.
 
 All experiments are conducted under the following conditions:
 
