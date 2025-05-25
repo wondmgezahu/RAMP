@@ -2,7 +2,7 @@
 Real-Time Adaptive Motion Planning via Point Cloud-Guided, Energy-Based Diffusion and Potential Fields
 
 ## Method Overview
-Our experiments demonstrate how real-time adaptive motion planning can be effectively applied to pursuit-evasion scenarios with non-holonomic constraints. The RAMP framework leverages point cloud data and energy-based diffusion techniques to generate efficient trajectories in the presence of dynamic agents and static obstacles.
+Our experiments demonstrate how real-time adaptive motion planning can be effectively applied to pursuit-evasion scenarios with non-holonomic constraints. The RAMP framework leverages point cloud data and energy-based diffusion techniques to generate efficient trajectories in the presence of dynamic agent and static obstacles.
 
 # Physical Robot Demonstrations
 
