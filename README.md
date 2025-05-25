@@ -20,7 +20,7 @@ All experiments are conducted under the following conditions:
 
 ## Experimental Scenarios
 
-Four pursuit-evasion experiments across two distinct start/goal configurations, each evaluated under varying obstacle densities:
+Four pursuit-evasion experiments across different start/goal configurations, each evaluated under varying obstacle densities:
 
 **Configuration Testing Matrix:**
 - **Scenario 1**: 4 static obstacles 
