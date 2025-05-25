@@ -37,12 +37,9 @@ Four pursuit-evasion experiments across two distinct start/goal configurations, 
 <video src="https://github.com/user-attachments/assets/caa43491-58ce-4817-9da9-8a3b4bb78d5b" controls="controls" style="max-width: 100%;">
 </video>
 
-
-**📥 [Download Original Quality](https://github.com/user-attachments/assets/67efd7f6-aab0-4672-b881-fc321c550a8b)** *(32.9 MB, 1080×1530, 1:10 duration)*
-
 *Demonstrates all four pursuit-evasion scenarios with real robot validation.*
 
-*Note: Download required for optimal viewing due to video format*
+*Note: The high quality video is attached with the submission.*
 
 ## Previous Physical Robot Experiments 
 
