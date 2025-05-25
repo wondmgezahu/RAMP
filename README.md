@@ -33,8 +33,9 @@ Four pursuit-evasion experiments across two distinct start/goal configurations, 
 4. Configuration B - 6 obstacles (2 unseen obstacles added)
 
 ## Experimental Videos
+<video src="https://github.com/user-attachments/assets/67efd7f6-aab0-4672-b881-fc321c550a8b" controls="controls" style="max-width: 730px;">
+</video>
 
-<video src="https://github.com/user-attachments/assets/67efd7f6-aab0-4672-b881-fc321c550a8b" width="450" height="720" controls></video>
 
 **📥 [Download Original Quality](https://github.com/user-attachments/assets/67efd7f6-aab0-4672-b881-fc321c550a8b)** *(32.9 MB, 1080×1530, 1:10 duration)*
 
