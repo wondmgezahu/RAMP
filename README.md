@@ -11,7 +11,7 @@ This documentation presents physical robot demonstrations for pursuit-evasion sc
 ## Experimental Setup
 
 ### Details of RC QCar
-[Car details to be added]
+The QCar1 by Quanser is a 1/10-scale autonomous vehicle platform designed for robotics and AI research. The platform includes key onboard sensors such as an IMU, RGB-D camera, and LiDAR, and is equipped with motion capture markers for integration with external tracking systems, making it ideal for experiments in localization, control, and navigation.
 
 ## New Physical Robot Experiments 
 
