@@ -12,7 +12,7 @@ This documentation presents physical robot demonstrations for pursuit-evasion sc
 
 Our pursuit-evasion scenario experiments were conducted using the [QCar1 by Quanser](https://www.quanser.com/products/qcar/), a 1/10-scale autonomous vehicle platform designed for robotics and AI research. The platform features onboard sensors including an IMU, RGB-D camera, and LiDAR, along with motion capture markers for external tracking system integration. This configuration makes the QCar1 ideal for research in localization, control, and navigation applications.
 
-## New Physical Robot Experiments 
+## Large Environment 
 
 ### Workspace Configuration
 All experiments are conducted under the following conditions:
@@ -43,7 +43,7 @@ Four pursuit-evasion experiments evaluated under varying obstacle densities:
 
 *Note: Download required for optimal viewing due to video format.*
 
-## Previous Physical Robot Experiments 
+## Small Environment 
 
 ### Workspace Configuration
 All experiments are conducted under the following conditions:
