@@ -14,8 +14,8 @@ Below are simulation and physical robot demonstrations showcasing the capabiliti
 
 
 <p align="center">
-  <img src="![image](https://github.com/user-attachments/assets/d8121aaa-9153-4585-8ca5-7d65280ffa0f" width="400" alt="Maze2D compositional results">
-  <img src="![image](https://github.com/user-attachments/assets/d8121aaa-9153-4585-8ca5-7d65280ffa0f" width="400" alt="Maze3D navigation with 25 obstacles">
+  <img src="![image](https://github.com/user-attachments/assets/d8121aaa-9153-4585-8ca5-7d65280ffa0f" width="200" alt="Maze2D compositional results">
+  <img src="![image](https://github.com/user-attachments/assets/d8121aaa-9153-4585-8ca5-7d65280ffa0f" width="200" alt="Maze3D navigation with 25 obstacles">
 </p>
 
 *Left: Maze2D compositional results demonstrating generalization capabilities. Right: Static obstacle avoidance in Maze3D environment with 20+ obstacles.*
