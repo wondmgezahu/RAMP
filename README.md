@@ -3,10 +3,24 @@ Real-Time Adaptive Motion Planning via Point Cloud-Guided, Energy-Based Diffusio
 
 ## Method Overview
 Our experiments demonstrate how real-time adaptive motion planning can be effectively applied to pursuit-evasion scenarios with non-holonomic constraints. The RAMP framework leverages point cloud data and energy-based diffusion techniques to generate efficient trajectories in the presence of dynamic agent and static obstacles.
+## Results
+
+Below are simulation and physical robot demonstrations showcasing the capabilities of our RAMP framework.
+
+### Simulation Results
+
+
+![image](https://github.com/user-attachments/assets/d8121aaa-9153-4585-8ca5-7d65280ffa0f)
+
+
+<p align="center">
+  <img src="![image](https://github.com/user-attachments/assets/d8121aaa-9153-4585-8ca5-7d65280ffa0f" width="400" alt="Maze2D compositional results">
+  <img src="![image](https://github.com/user-attachments/assets/d8121aaa-9153-4585-8ca5-7d65280ffa0f" width="400" alt="Maze3D navigation with 25 obstacles">
+</p>
+
+*Left: Maze2D compositional results demonstrating generalization capabilities. Right: Static obstacle avoidance in Maze3D environment with 20+ obstacles.*
 
 # Physical Robot Demonstrations
-
-This documentation presents physical robot demonstrations for pursuit-evasion scenarios implemented using our RAMP framework.
 
 ## Experimental Setup
 
