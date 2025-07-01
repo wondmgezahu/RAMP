@@ -17,7 +17,7 @@ Below are simulation and physical robot demonstrations showcasing the capabiliti
 </div>
 
 
-*Left: Maze2D compositional results shows generalization capabilities. Right: Obstacle avoidance in Maze3D environment with 20+ obstacles.*
+*Left: Maze2D compositional results showing generalization capabilities. Right: Obstacle avoidance in Maze3D environment with 20+ obstacles.*
 
 # Physical Robot Demonstrations
 
