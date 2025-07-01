@@ -10,7 +10,7 @@ Below are simulation and physical robot demonstrations showcasing the capabiliti
 ### Simulation Results
 
 
-<div style="display: flex; align-items: center; gap: 40px;">
+<div style="display: flex; align-items: center; gap: 80px;">
   <img src="https://github.com/user-attachments/assets/d8121aaa-9153-4585-8ca5-7d65280ffa0f" height="350" width="350" alt="Maze2D compositional results">
   <img src="https://github.com/user-attachments/assets/7320c893-1c45-41c0-969c-c7e76c36ea07" height="350" width="400" alt="Maze3D navigation with 25 obstacles">
 </div>
