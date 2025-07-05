@@ -66,5 +66,4 @@ Three pursuit-evasion experiments demonstrate our method performance under open 
 
 ##### Experimental Videos
 
-https://github.com/user-attachments/assets/7943ebcd-91ad-4839-9b45-e628b23893c8
-
+https://github.com/user-attachments/assets/ce173fd6-7c9c-4b59-ab73-bdf0bb54c396
