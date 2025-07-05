@@ -6,9 +6,7 @@ Our experiments demonstrate how real-time adaptive motion planning can be effect
 
 ![main_diag](https://github.com/user-attachments/assets/ad1f25e2-40ca-4d0e-ac7e-5d7b37ca8544)
 
-## Results
-
-#### Simulation Results
+### Simulation Results
 
 
 <div style="display: flex; align-items: center;">
@@ -20,15 +18,15 @@ Our experiments demonstrate how real-time adaptive motion planning can be effect
 
 *Left: Maze2D compositional results showing generalization capabilities. Right: Obstacle avoidance in Maze3D environment with 20+ obstacles.*
 
-# Physical Robot Demonstrations
+### Physical Robot Demonstrations
 
-## Experimental Setup
+#### Experimental Setup
 
 Our pursuit-evasion scenario experiments were conducted using the [QCar1 by Quanser](https://www.quanser.com/products/qcar/), a 1/10-scale autonomous vehicle platform designed for robotics and AI research. The platform features onboard sensors including an IMU, RGB-D camera, and LiDAR, along with motion capture markers for external tracking system integration. This configuration makes the QCar1 ideal for research in localization, control, and navigation applications.
 
-## Large Environment 
+#### Large Environment 
 
-### Workspace Configuration
+##### Workspace Configuration
 All experiments are conducted under the following conditions:
 - **Environment**: 6×6m² experimental area
 - **Robots**: Two autonomous vehicles - blue evader and red pursuer  
@@ -37,7 +35,7 @@ All experiments are conducted under the following conditions:
 - **Visualization**: Split-screen videos showing lab setup (bottom) and trajectory visualization (top)
 
 
-## Experimental Scenarios
+##### Experimental Scenarios
 
 Four pursuit-evasion experiments evaluated under varying obstacle densities:
 
@@ -45,7 +43,7 @@ Four pursuit-evasion experiments evaluated under varying obstacle densities:
 - **Scenario 1**: 4 static obstacles (baseline environment)
 - **Scenario 2**: 6 static obstacles (additional 2 unseen obstacles)
 
-## Experimental Videos
+##### Experimental Videos
 
 <video src="https://github.com/user-attachments/assets/caa43491-58ce-4817-9da9-8a3b4bb78d5b" controls="controls" style="max-width: 100%;">
 </video>
@@ -57,9 +55,9 @@ Four pursuit-evasion experiments evaluated under varying obstacle densities:
 
 *Note: Download required for optimal viewing due to video format.*
 
-## Small Environment 
+#### Small Environment 
 
-### Workspace Configuration
+##### Workspace Configuration
 All experiments are conducted under the following conditions:
 - **Environment**: 2×2m² experimental area
 - **Robots**: Two autonomous vehicles - green evader and red pursuer  
@@ -67,11 +65,11 @@ All experiments are conducted under the following conditions:
 - **Constraints**: All robots operate under non-holonomic motion constraints
 - **Visualization**: Split-screen videos showing lab setup (right) and trajectory visualization (left)
 
-## Experimental Scenarios
+##### Experimental Scenarios
 
 Three pursuit-evasion experiments demonstrate our method performance under open and static obstacle configurations.
 
-## Experimental Videos
+##### Experimental Videos
 
 https://github.com/user-attachments/assets/7943ebcd-91ad-4839-9b45-e628b23893c8
 
