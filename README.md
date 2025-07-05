@@ -8,9 +8,7 @@ Our experiments demonstrate how real-time adaptive motion planning can be effect
 
 ## Results
 
-Below are simulation and physical robot demonstrations showcasing the capabilities of our RAMP framework.
-
-### Simulation Results
+#### Simulation Results
 
 
 <div style="display: flex; align-items: center;">
