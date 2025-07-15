@@ -1,6 +1,6 @@
 ## Real-Time Adaptive Motion Planning via Point Cloud-Guided, Energy-Based Diffusion and Potential Fields
 
-**Paper:** [Arxiv](https://arxiv.org/abs/2507.09383v1)
+**Paper:** [Arxiv] - https://arxiv.org/abs/2507.09383v1
 
 ## Method Overview
 The RAMP framework leverages point cloud data and energy-based diffusion techniques to generate efficient trajectories in the presence of dynamic agent and static obstacles.
