@@ -1,0 +1,13 @@
+numpy
+torch
+matplotlib
+plotly
+setuptools
+pillow
+pyyaml
+wandb
+einops
+torchdiffeq
+torch-summary
+hydra-core
+urdfpy
