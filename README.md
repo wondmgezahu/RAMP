@@ -37,6 +37,10 @@ python inference_dynamic.py
 python inference3d.py
 ```
 
+## Dataset Generation
+
+You can generate datasets using the instructions from the [MPD](https://github.com/joaoamcarvalho/mpd-public).
+
 ### Simulation Results
 
 
@@ -81,4 +85,19 @@ Four pursuit-evasion experiments evaluated under varying obstacle densities:
 
 *Demonstrates all four pursuit-evasion scenarios with real robot validation.*
 
+## Citation
 
+```bibtex
+@article{teshome2025real,
+  title={Real-Time Adaptive Motion Planning via Point Cloud-Guided, Energy-Based Diffusion and Potential Fields},
+  author={Teshome, Wondmgezahu and Behzad, Kian and Camps, Octavia and Everett, Michael and Siami, Milad and Sznaier, Mario},
+  journal={IEEE Robotics and Automation Letters},
+  year={2025},
+  publisher={IEEE}
+}
+
+
+## Acknowledgements
+
+This work builds upon [Diffuser](https://github.com/jannerm/diffuser), [MPD](https://github.com/joaoamcarvalho/mpd-public), and [Potential-Based Diffusion Motion Planning](https://github.com/devinluo27/potential-motion-plan-release).
+```
