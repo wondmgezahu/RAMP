@@ -87,6 +87,8 @@ Four pursuit-evasion experiments evaluated under varying obstacle densities:
 
 ## Citation
 
+If you find our work useful, please consider citing our paper:
+
 ```bibtex
 @article{teshome2025real,
   title={Real-Time Adaptive Motion Planning via Point Cloud-Guided, Energy-Based Diffusion and Potential Fields},
