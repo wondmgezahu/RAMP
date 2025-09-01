@@ -7,6 +7,36 @@ The RAMP framework leverages point cloud data and energy-based diffusion techniq
 
 ![main_diag](https://github.com/user-attachments/assets/ad1f25e2-40ca-4d0e-ac7e-5d7b37ca8544)
 
+## Installation and Usage
+
+**Setup environment:**
+```bash
+git clone https://github.com/wondmgezahu/RAMP.git
+cd RAMP
+conda create -n ramp python=3.8
+conda activate ramp
+pip install -r requirements.txt
+```
+
+**Training** (set `'3d': True/False` in config for 3D/2D environments):
+```bash
+cd scripts/train
+CUDA_VISIBLE_DEVICES=0,1 python trainddp.py
+```
+
+**Inference:**
+```bash
+cd scripts/inference
+# Static 2D obstacles
+python inference_static.py
+
+# Dynamic obstacles  
+python inference_dynamic.py
+
+# 3D environments
+python inference3d.py
+```
+
 ### Simulation Results
 
 
@@ -51,20 +81,4 @@ Four pursuit-evasion experiments evaluated under varying obstacle densities:
 
 *Demonstrates all four pursuit-evasion scenarios with real robot validation.*
 
-#### Small Environment 
 
-##### Workspace Configuration
-All experiments are conducted under the following conditions:
-- **Environment**: 2×2m² experimental area
-- **Robots**: Two autonomous vehicles - green evader and red pursuer  
-- **Objective**: Evader must reach designated goal while avoiding capture
-- **Constraints**: All robots operate under non-holonomic motion constraints
-- **Visualization**: Split-screen videos showing lab setup (right) and trajectory visualization (left)
-
-##### Experimental Scenarios
-
-Three pursuit-evasion experiments demonstrate our method performance under open and static obstacle configurations.
-
-##### Experimental Videos
-
-https://github.com/user-attachments/assets/ce173fd6-7c9c-4b59-ab73-bdf0bb54c396
