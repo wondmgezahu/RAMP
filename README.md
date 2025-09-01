@@ -95,9 +95,9 @@ Four pursuit-evasion experiments evaluated under varying obstacle densities:
   year={2025},
   publisher={IEEE}
 }
-
+```
 
 ## Acknowledgements
 
 This work builds upon [Diffuser](https://github.com/jannerm/diffuser), [MPD](https://github.com/joaoamcarvalho/mpd-public), and [Potential-Based Diffusion Motion Planning](https://github.com/devinluo27/potential-motion-plan-release).
-```
+
