@@ -39,7 +39,7 @@ python inference3d.py
 
 ## Dataset Generation
 
-You can generate datasets using the instructions from the [MPD](https://github.com/joaoamcarvalho/mpd-public).
+You can download the pre-generated dataset [here](https://drive.google.com/drive/folders/1rRxOhzVX_05IGzz_UzNR9O7CNKFswOC5?usp=sharing). To generate your own, follow the [MPD](https://github.com/joaoamcarvalho/mpd-public) instructions. 
 
 ### Simulation Results
 
