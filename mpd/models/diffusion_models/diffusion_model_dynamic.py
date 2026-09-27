@@ -13,7 +13,7 @@ from abc import ABC
 from mpd.models.diffusion_models.helpers import cosine_beta_schedule, Losses, exponential_beta_schedule
 from mpd.models.diffusion_models.sample_functionsdynamic import extract, apply_hard_conditioning, \
     ddpm_sample_fn
-from .cost import compute_trajectory_costs
+from .cost import compute_trajectory_costs, compute_collision_with_pointcloud
 from .APFhelper_dynamic import avoidance,ObstacleField,generate_sphere_points
 
 def make_timesteps(batch_size, i, device):
@@ -491,12 +491,25 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
             x = x.detach()
         return x
 
+
     def smooth_ahead(self, x, stepp, window):
         '''Smooth the next `window` waypoints after x[:, stepp], clipped to the horizon.'''
         window = min(window, x.shape[1] - 1 - stepp)
         if window > 0:
             x[:, stepp+1:stepp+1+window] = self.sm(x[:, stepp], x[:, stepp + window], num_steps=window)
         return x
+
+    @staticmethod
+    def screen_waypoint(x, obstacle_points, collision_threshold, start):
+        '''Point-cloud collision screen on the waypoints.
+        Returns the best trajectory (H, D), or None if no candidate is collision-free.'''
+        free = ~compute_collision_with_pointcloud(x[:, start:], obstacle_points, collision_threshold)
+        if not free.any():
+            print('No collision-free trajectories found!')
+            return None
+        # collision_threshold=0.0 flags nothing, so this only ranks the screened candidates
+        best_traj, _, _, _, _ = compute_trajectory_costs(x[free], obstacle_points, collision_threshold=0.0)
+        return best_traj
 
     def ddim_p_sample_loop(self, shape, hard_conds,
         context=None,
@@ -506,9 +519,10 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
         t_start_guide=float('inf'),
         guide=None,
         n_guide_steps=1,
-        max_replan_attempts=1,
         **sample_kwargs,
     ):
+        '''If no candidate passes the low-level screen, the episode ends as a planning failure
+        (counted as a collision).'''
         device = self.betas.device
         batch_size = shape[0]
         x = torch.randn(shape, device=device)
@@ -530,15 +544,14 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
         chain_start = [hard_conds[0][0].unsqueeze(0)]
         updated_start_state = hard_conds[0].clone()
         # progress = utils.Progress(self.n_timesteps) if verbose else utils.Silent()
-        max_iteration=50 # 
+        max_iteration=50 
         # ddim_num_inference_steps_low=5 # dn_steps
         safe_threshold=0.2
-        distance_threshold_pred=0.4
         chain = [] if return_chain else None
         stepp=0
         collision_threshold_high=0.02 # high-level plan screen (static obstacle points)
-        collision_threshold_low=0.01 # low-level screen, paper evaluation (was 0.05)
-        replan_scratch_shape=(30,48,4) # BxHxD
+        collision_threshold_low=0.01 # low-level screen (static and pursuer obstacle points)
+        distance_threshold_pred=0.4 # the pursuer is added to the low-level screen within this distance
         use_apf=False
         # STAGE I: generate high-level plan
         high_time=time.time()
@@ -598,25 +611,15 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
             
             window=2
             x = self.smooth_ahead(x, stepp, window)
-            # for fully observable pursuer, we can use the pursuer obstacle points besides the static obstacle points all the time in compute_trajectory_costs.
-            # we can use the following when the evader is within distance_threshold_pred of pursuer, which will be partially observable
-            if np.linalg.norm(x[0,stepp,:2].cpu().numpy()-multi_sphere_field.centers[0].cpu().numpy()) <distance_threshold_pred: 
+            # Low-level screen on the waypoints: static obstacle points,
+            # plus the pursuer's points when the evader is within distance_threshold_pred of it
+            if np.linalg.norm(x[0,stepp,:2].cpu().numpy()-multi_sphere_field.centers[0].cpu().numpy()) <distance_threshold_pred:
                 pursuer_obstacle_pts=generate_sphere_points(multi_sphere_field.centers[0].cpu().numpy(),multi_sphere_field.radii[0].cpu().numpy(),64)
-                x,_, _,_,_=compute_trajectory_costs(x, torch.vstack([obstacle_pts[0],torch.from_numpy(pursuer_obstacle_pts).unsqueeze(0).to(obstacle_pts.device)]),collision_threshold=collision_threshold_low) 
+                screen_pts=torch.vstack([obstacle_pts[0],torch.from_numpy(pursuer_obstacle_pts).unsqueeze(0).to(obstacle_pts.device)])
             else:
-                x,_, _,_,_=compute_trajectory_costs(x, obstacle_pts[0],collision_threshold=collision_threshold_low)
-            replan_attempts = 0  #
-            while x is None and replan_attempts < max_replan_attempts:
-                replan_attempts += 1
-                print(f'replanning from scratch')
-                new_hard_conds = {kk: v[:replan_scratch_shape[0]].clone() for kk, v in hard_conds.items()}
-                new_obstacle_pts=obstacle_pts[:replan_scratch_shape[0]]
-                x=self.ddim_replan_scratch(replan_scratch_shape,new_hard_conds,context,traj_normalized,forward_t=k,obstacle_pts=new_obstacle_pts,use_apf=False,executed_history=executed_history)
-                window=2
-                x = self.smooth_ahead(x, stepp, window)
-                x,_, _,_,_=compute_trajectory_costs(x, obstacle_pts[0],collision_threshold=collision_threshold_low)
-                # x,_, _,_,_=compute_trajectory_costs(x, torch.vstack([obstacle_pts[0],torch.from_numpy(pursuer_obstacle_pts).unsqueeze(0).to(obstacle_pts.device)]),collision_threshold=collision_threshold_low)
-            if x is None:  # no candidate passed the screen within the allowed replans: planning failure
+                screen_pts=obstacle_pts[0]
+            x=self.screen_waypoint(x, screen_pts, collision_threshold_low, stepp+1)
+            if x is None:  # no candidate passed the screen: planning failure
                 print("No collision-free plan, stopping")
                 planning_failure = True
                 break
