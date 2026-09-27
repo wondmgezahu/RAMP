@@ -210,7 +210,7 @@ class DynamicInference:
         )
         # breakpoint()
         with TimerCUDA() as timer:
-            trajs_normalized_iters, chain_obs, chain_start = self.model.run_inference(
+            trajs_normalized_iters, chain_obs, chain_start, planning_failure = self.model.run_inference(
                 context, hard_conds,
                 n_samples=self.config.n_samples, 
                 horizon=n_support_points,
@@ -223,7 +223,8 @@ class DynamicInference:
             )
         # breakpoint()
         # Process chains
-        chain_obs.pop()
+        if chain_obs:  # empty when planning fails at the first step
+            chain_obs.pop()
         chain_obs = [tensor.cpu().detach().numpy() for tensor in chain_obs]
         chain_start = [np.around(tensor[:,:2].cpu().detach().numpy(), decimals=4) for tensor in chain_start]
         
@@ -249,7 +250,9 @@ class DynamicInference:
             'start_state_pos': start_state_pos,
             'goal_state_pos': goal_state_pos,
             'computation_time': timer.elapsed,
-            'collision_intensity': bool(collision_intensities.any().item())
+            # a planning failure counts as a collision (captured), so it gets no score credit
+            'collision_intensity': bool(collision_intensities.any().item()) or bool(planning_failure),
+            'planning_failure': bool(planning_failure),
         }
         # breakpoint()
         # Render if needed
@@ -279,6 +282,7 @@ class DynamicInference:
         
         for exp_idx in range(n_experiments):
             print(f'Running experiment {exp_idx + 1}/{n_experiments}')
+            fix_random_seed(self.config.seed + exp_idx)  # reproducible experiments
             # self.setup_model_and_dataset()
             
             experiment_metrics = []
@@ -301,6 +305,7 @@ class DynamicInference:
                     pursuer_radius=self.config.pursuer_radius
                 )
                 episode_metrics['computation_time'] = metrics['computation_time']
+                episode_metrics['planning_failure'] = metrics['planning_failure']
                 experiment_metrics.append(episode_metrics)
                     
                 # except Exception as e:
@@ -334,6 +339,10 @@ class DynamicInference:
             'score': {
                 'mean': np.mean([m['score'] for m in all_metrics]),
                 'std': np.std([m['score'] for m in all_metrics])
+            },
+            'planning_failure_rate': {  # included in detection_rate
+                'mean': np.mean([m['planning_failure'] for m in all_metrics]),
+                'std': np.std([m['planning_failure'] for m in all_metrics])
             }
         }
         return final_metrics
@@ -350,7 +359,8 @@ class DynamicInference:
             'detection_rate': {'mean': [], 'std': []},
             'goal_success': {'mean': [], 'std': []},
             'path_length': {'mean': [], 'std': []},
-            'score': {'mean': [], 'std': []}
+            'score': {'mean': [], 'std': []},
+            'planning_failure_rate': {'mean': [], 'std': []}
         }
         # Collect values across experiments
         for result in all_results:
@@ -414,7 +424,7 @@ def main():
         model_id='model2d',
         dataset_subdir='EnvPredator',
         n_samples=35,
-        render=True,
+        render=False,  # True writes a gif per context
         device='cuda',
         velocity_max_pursuer=0.5,
         pursuit_strength=0.8,
@@ -426,8 +436,8 @@ def main():
     # Run inference
     inference = DynamicInference(config)
     
-    n_contexts = 5  # 100 for paper 
-    n_experiments = 2  # 10 for paper
+    n_contexts = 100  
+    n_experiments = 5  
     save_path = 'dynamic_results'
     os.makedirs(save_path, exist_ok=True) 
     results = inference.run_multiple_experiments(

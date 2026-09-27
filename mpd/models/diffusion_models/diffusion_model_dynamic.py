@@ -491,15 +491,22 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
             x = x.detach()
         return x
 
+    def smooth_ahead(self, x, stepp, window):
+        '''Smooth the next `window` waypoints after x[:, stepp], clipped to the horizon.'''
+        window = min(window, x.shape[1] - 1 - stepp)
+        if window > 0:
+            x[:, stepp+1:stepp+1+window] = self.sm(x[:, stepp], x[:, stepp + window], num_steps=window)
+        return x
 
     def ddim_p_sample_loop(self, shape, hard_conds,
-        context=None, 
+        context=None,
         return_chain=False,
         traj_normalized=None,
         obstacle_pts=None,
-        t_start_guide=float('inf'), 
+        t_start_guide=float('inf'),
         guide=None,
         n_guide_steps=1,
+        max_replan_attempts=1,
         **sample_kwargs,
     ):
         device = self.betas.device
@@ -523,14 +530,14 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
         chain_start = [hard_conds[0][0].unsqueeze(0)]
         updated_start_state = hard_conds[0].clone()
         # progress = utils.Progress(self.n_timesteps) if verbose else utils.Silent()
-        max_iteration=60 # 50
+        max_iteration=50 # 
         # ddim_num_inference_steps_low=5 # dn_steps
         safe_threshold=0.2
         distance_threshold_pred=0.4
         chain = [] if return_chain else None
-        stepp=0 
-        collision_threshold_high=0.02 #
-        collision_threshold_low=0.05# 
+        stepp=0
+        collision_threshold_high=0.02 # high-level plan screen (static obstacle points)
+        collision_threshold_low=0.01 # low-level screen, paper evaluation (was 0.05)
         replan_scratch_shape=(30,48,4) # BxHxD
         use_apf=False
         # STAGE I: generate high-level plan
@@ -545,9 +552,13 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
             x = apply_hard_conditioning(x, hard_conds)
             x = x.detach()
         best_traj,best_cost, total_costs,collision_free_mask,_=compute_trajectory_costs(x, obstacle_pts[0],collision_threshold=collision_threshold_high)
+        if best_traj is None:  # no high-level candidate passed the screen: planning failure at the first step
+            print("No collision-free high-level plan, stopping")
+            return x[0], torch.stack([x[0].unsqueeze(0)], dim=1), chain_obs, chain_start, True
         high_plan=best_traj.clone()
         x=best_traj.clone()
         executed_history = [x[0].clone().unsqueeze(0)]
+        planning_failure = False
         # STAGE II: low-level plan
         for k in range(max_iteration):
             use_apf=False # introduce apf in the later stages of the sampling
@@ -571,10 +582,9 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
                 if i==0: # controls when to introduce apf
                     use_apf=True # 
                     window=3
-                    # if stepp>44:
-                        # window=1    
-                    smooth_segment = self.sm(x[:, stepp], x[:, stepp + window], num_steps=window) 
-                    x[:, stepp+1:stepp+1+window] = smooth_segment  
+                    if stepp>44:
+                        window=1
+                    x = self.smooth_ahead(x, stepp, window)
                 x = self.ddim_p_sample(x, hard_conds, context,timesteps, 
                                        obstacle_pts,traj_normalized=traj_normalized,
                                        forward_t=k,eta=0.0, use_apf=use_apf,
@@ -587,8 +597,7 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
                 x = x.detach()
             
             window=2
-            smooth_segment = self.sm(x[:, stepp], x[:, stepp + window], num_steps=window)
-            x[:, stepp+1:stepp+1+window] = smooth_segment  
+            x = self.smooth_ahead(x, stepp, window)
             # for fully observable pursuer, we can use the pursuer obstacle points besides the static obstacle points all the time in compute_trajectory_costs.
             # we can use the following when the evader is within distance_threshold_pred of pursuer, which will be partially observable
             if np.linalg.norm(x[0,stepp,:2].cpu().numpy()-multi_sphere_field.centers[0].cpu().numpy()) <distance_threshold_pred: 
@@ -596,16 +605,23 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
                 x,_, _,_,_=compute_trajectory_costs(x, torch.vstack([obstacle_pts[0],torch.from_numpy(pursuer_obstacle_pts).unsqueeze(0).to(obstacle_pts.device)]),collision_threshold=collision_threshold_low) 
             else:
                 x,_, _,_,_=compute_trajectory_costs(x, obstacle_pts[0],collision_threshold=collision_threshold_low)
-            while x is None: 
+            replan_attempts = 0  #
+            while x is None and replan_attempts < max_replan_attempts:
+                replan_attempts += 1
                 print(f'replanning from scratch')
                 new_hard_conds = {kk: v[:replan_scratch_shape[0]].clone() for kk, v in hard_conds.items()}
                 new_obstacle_pts=obstacle_pts[:replan_scratch_shape[0]]
                 x=self.ddim_replan_scratch(replan_scratch_shape,new_hard_conds,context,traj_normalized,forward_t=k,obstacle_pts=new_obstacle_pts,use_apf=False,executed_history=executed_history)
                 window=2
-                smooth_segment = self.sm(x[:, stepp], x[:, stepp + window], num_steps=window)
-                x[:, stepp+1:stepp+1+window] = smooth_segment 
+                x = self.smooth_ahead(x, stepp, window)
                 x,_, _,_,_=compute_trajectory_costs(x, obstacle_pts[0],collision_threshold=collision_threshold_low)
-                # x,_, _,_,_=compute_trajectory_costs(x, torch.vstack([obstacle_pts[0],torch.from_numpy(pursuer_obstacle_pts).unsqueeze(0).to(obstacle_pts.device)]),collision_threshold=collision_threshold_low) 
+                # x,_, _,_,_=compute_trajectory_costs(x, torch.vstack([obstacle_pts[0],torch.from_numpy(pursuer_obstacle_pts).unsqueeze(0).to(obstacle_pts.device)]),collision_threshold=collision_threshold_low)
+            if x is None:  # no candidate passed the screen within the allowed replans: planning failure
+                print("No collision-free plan, stopping")
+                planning_failure = True
+                break
+            if stepp + 1 >= x.shape[0]:  # end of the horizon: stop (scored as not reaching the goal)
+                break
             x[0,2:]=0.0
             next_state = x[stepp + 1].clone().unsqueeze(0)  # Get next state 
             executed_history.append(next_state)  
@@ -620,8 +636,10 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
             if torch.norm(x[stepp-1,:2]-x[-1,:2]) < safe_threshold:
                 break
         if return_chain:
+            if not chain:  # planning failure at the first step: keep the high-level plan
+                chain.append(high_plan.unsqueeze(0).clone())
             chain = torch.stack(chain, dim=1)
-        return x, chain, chain_obs, chain_start            
+        return x, chain, chain_obs, chain_start, planning_failure
 
     @torch.no_grad()
     def conditional_sample(self, hard_conds, horizon=None, batch_size=1, ddim=False, traj_normalized=None,obstacle_pts=None,**sample_kwargs):
@@ -653,15 +671,16 @@ class DynamicGaussianDiffusionModel(nn.Module, ABC):
         for k, v in hard_conds.items():
             new_state = einops.repeat(v, 'd -> b d', b=n_samples)
             hard_conds[k] = new_state
-        samples, chain,chain_obs,chain_start = self.conditional_sample(
+        samples, chain,chain_obs,chain_start,*rest = self.conditional_sample(
             hard_conds, context=context, batch_size=n_samples, return_chain=True, traj_normalized=traj_normalized,obstacle_pts=obstacle_pts,**diffusion_kwargs
         )
+        planning_failure = rest[0] if rest else False  # only the DDIM loop reports planning failures
         trajs_chain_normalized = chain
 
         # trajs: [ (n_diffusion_steps + 1) x n_samples x horizon x state_dim ]
         trajs_chain_normalized = einops.rearrange(trajs_chain_normalized, 'b diffsteps h d -> diffsteps b h d')
         if return_chain:
-            return trajs_chain_normalized,chain_obs,chain_start
+            return trajs_chain_normalized,chain_obs,chain_start,planning_failure
 
         # return the last denoising step
         return trajs_chain_normalized[-1]

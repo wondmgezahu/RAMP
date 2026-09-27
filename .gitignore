@@ -1,0 +1,10 @@
+# data and trained models (download separately, see README)
+dataset/
+checkpoints/
+
+# evaluation outputs
+scripts/inference/dynamic_results/
+
+# python
+__pycache__/
+*.pyc
